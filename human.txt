@@ -1,0 +1,16 @@
+/* SITE */
+Name: Mayank Deshpande - Personal Portfolio
+URL: https://mayankd.me
+Description: Personal website of Mayank Deshpande
+Keywords: Mayank Deshpande, robotics, computer vision, AI, Software engineer
+Language: English
+Author: Mayank Deshpande
+Contact: mayank [at] domain.com
+LinkedIn: https://www.linkedin.com/in/mayank-deshpande
+GitHub: https://github.com/MayankD409
+Twitter: @Mayank_D04
+
+/* TECHNOLOGY */
+Built with: Gatsby, React, JavaScript
+Hosting: Netlify
+Last Updated: 2023-09 

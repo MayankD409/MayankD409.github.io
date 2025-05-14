@@ -1,0 +1,41 @@
+{
+  "name": "Mayank Deshpande",
+  "occupation": "Software Engineer",
+  "website": "https://mayankd.me",
+  "profiles": [
+    {
+      "network": "GitHub",
+      "url": "https://github.com/MayankD409",
+      "username": "MayankD409"
+    },
+    {
+      "network": "Twitter",
+      "url": "https://twitter.com/Mayank_D04",
+      "username": "Mayank_D04"
+    },
+    {
+      "network": "LinkedIn",
+      "url": "https://www.linkedin.com/in/mayank-deshpande",
+      "username": "mayank-deshpande"
+    }
+  ],
+  "skills": [
+    "Robotics",
+    "Computer Vision",
+    "Perception",
+    "AI",
+    "Machine Learning",
+    "Deep Learning",
+    "Python",
+    "C++",
+    "ROS"
+  ],
+  "education": [
+    {
+      "degree": "Master's degree",
+      "field": "Robotics",
+      "institution": "University of Maryland, College Park",
+      "year": 2025
+    }
+  ]
+} 
