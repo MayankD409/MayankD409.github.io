@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
-import { email } from '@config';
 import { navDelay, loaderDelay } from '@utils';
 import { usePrefersReducedMotion } from '@hooks';
 
 const StyledHeroSection = styled.section`
-  text-align: justify; // Add this line to justify the text content
+  text-align: left;
   ${({ theme }) => theme.mixins.flexCenter};
   flex-direction: column;
   align-items: flex-start;
   min-height: 100vh;
-  height: 100vh;
-  padding: 0;
+  min-height: 100svh; // mobile browsers: ignore the collapsing URL bar
+  padding: var(--nav-height) 0 60px;
 
-  @media (max-height: 700px) and (min-width: 700px), (max-width: 360px) {
-    height: auto;
-    padding-top: var(--nav-height);
+  @media (min-width: 768px) {
+    text-align: justify; // justified text gets ugly rivers on a narrow column
+  }
+
+  @media (max-height: 700px) and (min-width: 700px) {
+    min-height: auto;
   }
 
   h1 {
@@ -68,19 +70,21 @@ const Hero = () => {
   const four = (
     <>
       <p>
-        I'm on an <strong>upskilling journey</strong> to master <strong>AI</strong>, pushing boundaries everyday to explore the edge of the fractal.
+        I'm a <strong>Perception Engineer</strong> at <strong>Contoro Robotics</strong>, where I own
+        the stack that lets our robots actually see what they're picking up—cameras, LiDAR,
+        segmentation models, and a whole lot of 3D geometry.
       </p>
 
       <p>
-        My expertise spans across <strong>NLP</strong>, <strong>Robotics (Controls, C++ dev)</strong>, and <strong>deploying</strong> <strong>Multimodal AI</strong> systems, all while crafting something innovative along the way.
+        Outside of work my head is mostly in <strong>Multimodal</strong> and{' '}
+        <strong>Embodied AI</strong>, and I build <strong>RAG</strong> and{' '}
+        <strong>AI engineering</strong> projects on weekends just to see how far I can push them. I
+        also read about <strong>markets and finance</strong> almost every day.
       </p>
 
       <p>
-        Always looking to work on exciting projects—feel free to{' '}
-        <a href="#contact">
-          reach out
-        </a>
-        {' '}if you'd like to build something amazing together!
+        Always looking to work on exciting projects—feel free to <a href="#contact">reach out</a> if
+        you'd like to build something amazing together!
       </p>
     </>
   );
