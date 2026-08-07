@@ -132,8 +132,6 @@ const StyledProject = styled.li`
     }
 
     @media (max-width: 768px) {
-      color: var(--white);
-
       a {
         position: static;
 
@@ -153,9 +151,13 @@ const StyledProject = styled.li`
 
   .project-description {
     ${({ theme }) => theme.mixins.boxShadow};
-    text-align: justify;
+    text-align: left;
     position: relative;
     z-index: 2;
+
+    @media (min-width: 768px) {
+      text-align: justify; // justified text gets ugly rivers on a narrow column
+    }
     padding: 25px;
     border-radius: var(--border-radius);
     background-color: var(--light-navy);
@@ -177,8 +179,8 @@ const StyledProject = styled.li`
     }
 
     strong {
-      color: var(--white);
-      font-weight: normal;
+      color: var(--lightest-slate);
+      font-weight: 600;
     }
   }
 
@@ -246,7 +248,7 @@ const StyledProject = styled.li`
     @media (max-width: 768px) {
       grid-column: 1 / -1;
       height: 100%;
-      opacity: 0.5;
+      opacity: 0.25; // faint backdrop so the dark card text stays readable
     }
 
     a {
@@ -265,7 +267,7 @@ const StyledProject = styled.li`
         .img {
           background: transparent;
           filter: none;
-          opacity: 1; /* Restore full opacity on hover *
+          opacity: 1; /* Restore full opacity on hover */
         }
       }
 
@@ -281,7 +283,6 @@ const StyledProject = styled.li`
         z-index: 3;
         transition: var(--transition);
         background-color: var(--navy);
-
       }
     }
 
@@ -293,9 +294,9 @@ const StyledProject = styled.li`
 
       @media (max-width: 768px) {
         object-fit: cover;
-        width: auto;
+        width: 100%;
         height: 100%;
-        filter: grayscale(100%) contrast(1) brightness(50%);
+        filter: grayscale(100%) contrast(1) brightness(115%);
       }
     }
   }
@@ -354,6 +355,9 @@ const Featured = () => {
             const { frontmatter, html } = node;
             const { external, title, tech, github, cover } = frontmatter;
             const image = getImage(cover);
+            // Every featured project currently ships `external: ''`, so falling back to
+            // github keeps the title and cover from linking to an empty href.
+            const projectUrl = external || github || null;
 
             return (
               <StyledProject key={i} ref={el => (revealProjects.current[i] = el)}>
@@ -362,7 +366,13 @@ const Featured = () => {
                     <p className="project-overline">Featured Project</p>
 
                     <h3 className="project-title">
-                      <a href={external}>{title}</a>
+                      {projectUrl ? (
+                        <a href={projectUrl} target="_blank" rel="noopener noreferrer">
+                          {title}
+                        </a>
+                      ) : (
+                        title
+                      )}
                     </h3>
 
                     <div
@@ -370,7 +380,7 @@ const Featured = () => {
                       dangerouslySetInnerHTML={{ __html: html }}
                     />
 
-                    {tech.length && (
+                    {tech?.length > 0 && (
                       <ul className="project-tech-list">
                         {tech.map((tech, i) => (
                           <li key={i}>{tech}</li>
@@ -380,12 +390,21 @@ const Featured = () => {
 
                     <div className="project-links">
                       {github && (
-                        <a href={github} aria-label="GitHub Link">
+                        <a
+                          href={github}
+                          aria-label={`${title} on GitHub`}
+                          target="_blank"
+                          rel="noopener noreferrer">
                           <Icon name="GitHub" />
                         </a>
                       )}
                       {external && (
-                        <a href={external} aria-label="External Link" className="external">
+                        <a
+                          href={external}
+                          aria-label={`${title} live site`}
+                          className="external"
+                          target="_blank"
+                          rel="noopener noreferrer">
                           <Icon name="External" />
                         </a>
                       )}
@@ -394,7 +413,12 @@ const Featured = () => {
                 </div>
 
                 <div className="project-image">
-                  <a href={external ? external : github ? github : '#'}>
+                  <a
+                    href={projectUrl || '#'}
+                    aria-label={title}
+                    tabIndex={-1}
+                    target="_blank"
+                    rel="noopener noreferrer">
                     <GatsbyImage image={image} alt={title} className="img" />
                   </a>
                 </div>

@@ -137,10 +137,14 @@ const StyledTabPanels = styled.div`
 `;
 
 const StyledTabPanel = styled.div`
-  text-align: justify; // Add this line to justify the text content
+  text-align: left;
   width: 100%;
   height: auto;
   padding: 10px 5px;
+
+  @media (min-width: 768px) {
+    text-align: justify; // justified text gets ugly rivers on a narrow column
+  }
 
   ul {
     ${({ theme }) => theme.mixins.fancyList};

@@ -9,11 +9,11 @@ const useScrollDirection = ({ initialDirection, thresholdPixels, off } = {}) => 
 
   useEffect(() => {
     const threshold = thresholdPixels || 0;
-    let lastScrollY = window.pageYOffset;
+    let lastScrollY = window.scrollY;
     let ticking = false;
 
     const updateScrollDir = () => {
-      const scrollY = window.pageYOffset;
+      const scrollY = window.scrollY;
 
       if (Math.abs(scrollY - lastScrollY) < threshold) {
         // We haven't exceeded the threshold

@@ -69,7 +69,7 @@ const StyledNav = styled.nav`
     a {
       color: var(--green);
       width: 48px;
-      height: 48px; 
+      height: 48px;
       position: relative;
       z-index: 1;
 
@@ -153,12 +153,14 @@ const StyledLinks = styled.div`
 
 const Nav = ({ isHome }) => {
   const [isMounted, setIsMounted] = useState(!isHome);
-  const scrollDirection = useScrollDirection('down');
+  // useScrollDirection destructures an options object; passing the bare string
+  // left initialDirection undefined and the threshold at 0.
+  const scrollDirection = useScrollDirection({ initialDirection: 'down', thresholdPixels: 10 });
   const [scrolledToTop, setScrolledToTop] = useState(true);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const handleScroll = () => {
-    setScrolledToTop(window.pageYOffset < 50);
+    setScrolledToTop(window.scrollY < 50);
   };
 
   useEffect(() => {

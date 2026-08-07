@@ -304,7 +304,7 @@ const GlobalStyle = createGlobalStyle`
 
     & > code {
       background-color: var(--light-navy);
-      color: var(--white);
+      color: var(--lightest-slate);
       font-size: var(--fz-sm);
       border-radius: var(--border-radius);
       padding: 0.3em 0.5em;

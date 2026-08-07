@@ -98,7 +98,9 @@ const StyledSidebar = styled.aside`
     padding: 50px 10px;
     width: min(75vw, 400px);
     height: 100vh;
+    height: 100svh; // mobile browsers: ignore the collapsing URL bar
     outline: 0;
+    overflow-y: auto;
     background-color: var(--light-navy);
     box-shadow: -10px 0px 30px -15px var(--navy-shadow);
     z-index: 9;
@@ -253,7 +255,7 @@ const Menu = () => {
           </div>
         </StyledHamburgerButton>
 
-        <StyledSidebar menuOpen={menuOpen} aria-hidden={!menuOpen} tabIndex={menuOpen ? 1 : -1}>
+        <StyledSidebar menuOpen={menuOpen} aria-hidden={!menuOpen} tabIndex={menuOpen ? 0 : -1}>
           <nav ref={navRef}>
             {navLinks && (
               <ol>
@@ -267,7 +269,12 @@ const Menu = () => {
               </ol>
             )}
 
-            <a href="/resume.pdf" className="resume-link">
+            <a
+              href="/resume.pdf"
+              className="resume-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMenuOpen(false)}>
               Resume
             </a>
           </nav>

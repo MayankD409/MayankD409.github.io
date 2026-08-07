@@ -8,8 +8,13 @@ import { Icon } from '@components/icons';
 import { usePrefersReducedMotion } from '@hooks';
 
 const StyledProjectsSection = styled.section`
-  text-align: justify;
+  text-align: left;
   display: flex;
+
+  @media (min-width: 768px) {
+    text-align: justify; // justified text gets ugly rivers on a narrow column
+  }
+
   flex-direction: column;
   align-items: center;
 
