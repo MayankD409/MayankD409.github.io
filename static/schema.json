@@ -9,36 +9,35 @@
       "familyName": "Deshpande",
       "url": "https://mayankd.me",
       "image": "https://mayankd.me/og.png",
-      "jobTitle": "Robotics Software Engineer",
-      "description": "Software Engineer with expertise in Robotics and AI",
+      "jobTitle": "Robotics Perception Engineer",
+      "description": "Perception engineer building production 3D perception for autonomous robots",
       "sameAs": [
         "https://github.com/MayankD409",
         "https://twitter.com/Mayank_D04",
-        "https://www.linkedin.com/in/mayank-deshpande"
+        "https://www.linkedin.com/in/msdeshpande04/",
+        "https://medium.com/@deshpandemayank5"
       ],
       "knowsAbout": [
         "Robotics",
         "Computer Vision",
-        "Perception",
+        "3D Perception",
+        "Sensor Fusion",
         "Artificial Intelligence",
         "Machine Learning",
         "Deep Learning",
-        "Multimodal Foundation Models",
-        "Agentic AI"
-      ],
-      "knowsLanguage": [
+        "Multimodal AI",
+        "Embodied AI",
         "Python",
-        "C++",
-        "C",
-        "MATLAB"
+        "C++"
       ],
       "alumniOf": {
         "@type": "CollegeOrUniversity",
-        "name": "Master's degree in Robotics"
+        "name": "University of Maryland, College Park"
       },
       "worksFor": {
         "@type": "Organization",
-        "name": ""
+        "name": "Contoro Robotics",
+        "url": "https://www.contoro.com/"
       }
     },
     {
@@ -90,4 +89,4 @@
       }
     }
   ]
-} 
+}

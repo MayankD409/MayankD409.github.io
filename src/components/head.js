@@ -26,41 +26,54 @@ const Head = ({ title, description, image, keywords }) => {
     `,
   );
 
-  const {
-    defaultTitle,
-    defaultDescription,
-    siteUrl,
-    defaultImage,
-    twitterUsername,
-  } = site.siteMetadata;
+  const { defaultTitle, defaultDescription, siteUrl, defaultImage, twitterUsername } =
+    site.siteMetadata;
 
   const seo = {
     title: title || defaultTitle,
     description: description || defaultDescription,
     image: `${siteUrl}${image || defaultImage}`,
     url: `${siteUrl}${pathname}`,
-    keywords: keywords || "Mayank Deshpande, computer vision, AI, robotics, software developer, autonomous systems",
+    keywords:
+      keywords ||
+      'Mayank Deshpande, computer vision, AI, robotics, software developer, autonomous systems',
   };
 
   // Schema.org structured data for a person
   const personSchema = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Mayank Deshpande",
-    "url": siteUrl,
-    "image": `${siteUrl}${defaultImage}`,
-    "jobTitle": "Software Engineer",
-    "worksFor": {
-      "@type": "Organization",
-      "name": ""  // Can be filled with your company name if employed
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Mayank Deshpande',
+    url: siteUrl,
+    image: `${siteUrl}${defaultImage}`,
+    jobTitle: 'Robotics Perception Engineer',
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Contoro Robotics',
+      url: 'https://www.contoro.com/',
     },
-    "description": defaultDescription,
-    "sameAs": [
+    description: defaultDescription,
+    alumniOf: {
+      '@type': 'CollegeOrUniversity',
+      name: 'University of Maryland, College Park',
+    },
+    knowsAbout: [
+      'Robotics',
+      'Computer Vision',
+      '3D Perception',
+      'Sensor Fusion',
+      'Deep Learning',
+      'Multimodal AI',
+      'Embodied AI',
+      'Python',
+      'C++',
+    ],
+    sameAs: [
       `https://twitter.com/${twitterUsername.replace('@', '')}`,
-      // Add other social profiles here
-      "https://github.com/MayankD409",
-      "https://www.linkedin.com/in/mayank-deshpande" // Update if this is not correct
-    ]
+      'https://github.com/MayankD409',
+      'https://www.linkedin.com/in/msdeshpande04/',
+      'https://medium.com/@deshpandemayank5',
+    ],
   };
 
   return (
@@ -92,15 +105,16 @@ const Head = ({ title, description, image, keywords }) => {
 
       {/* Google verification */}
       <meta name="google-site-verification" content="DCl7VAf9tcz6eD9gb67NfkNnJ1PKRNcg8qQiwpbx9Lk" />
-      
+
       {/* Additional meta tags */}
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta
+        name="robots"
+        content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      
+
       {/* Schema.org structured data */}
-      <script type="application/ld+json">
-        {JSON.stringify(personSchema)}
-      </script>
+      <script type="application/ld+json">{JSON.stringify(personSchema)}</script>
     </Helmet>
   );
 };

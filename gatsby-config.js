@@ -13,7 +13,7 @@ module.exports = {
     lang: 'en',
     headline: 'Robotics Software Engineer specializing in Computer Vision and AI',
     github: 'https://github.com/MayankD409',
-    linkedin: 'https://www.linkedin.com/in/mayank-deshpande',
+    linkedin: 'https://www.linkedin.com/in/msdeshpande04/',
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
