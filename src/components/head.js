@@ -50,7 +50,7 @@ const Head = ({ title, description, image, keywords }) => {
     worksFor: {
       '@type': 'Organization',
       name: 'Contoro Robotics',
-      url: 'https://www.contoro.com/',
+      url: 'https://contoro.com/',
     },
     description: defaultDescription,
     alumniOf: {

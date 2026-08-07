@@ -4,7 +4,7 @@ title: 'Robotics Perception Engineer'
 company: 'Contoro Robotics'
 location: 'Austin, TX'
 range: 'Oct 2025 - Present'
-url: 'https://www.contoro.com/'
+url: 'https://contoro.com/'
 ---
 
 - Own the perception stack for the entire fleet of autonomous box unloading robots. RGB-D cameras and 2D/3D LiDAR feeding segmentation, point-cloud reconstruction, 6-DoF grasp poses, and obstacle detection.
