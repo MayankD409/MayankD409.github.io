@@ -258,31 +258,22 @@ const StyledProject = styled.li`
       border-radius: var(--border-radius);
       vertical-align: middle;
 
+      /*
+        No :before overlay here. Upstream paints one in --navy and relies on
+        mix-blend-mode: screen to turn it into a tint; with the blend modes
+        dropped for the light theme it is just an opaque block covering the
+        cover image. The tint now comes from --green showing through the
+        partly transparent image instead.
+      */
       &:hover,
       &:focus {
         background: transparent;
         outline: 0;
 
-        &:before,
         .img {
-          background: transparent;
           filter: none;
-          opacity: 1; /* Restore full opacity on hover */
+          opacity: 1;
         }
-      }
-
-      &:before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 3;
-        transition: var(--transition);
-        background-color: var(--navy);
       }
     }
 
@@ -290,7 +281,7 @@ const StyledProject = styled.li`
       border-radius: var(--border-radius);
 
       filter: grayscale(100%) contrast(1) brightness(90%);
-      opacity: 0.6; /* Set initial opacity to make it transparent */
+      opacity: 0.85; /* lets --green through as a warm tint; 1 on hover */
 
       @media (max-width: 768px) {
         object-fit: cover;
