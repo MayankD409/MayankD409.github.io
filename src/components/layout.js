@@ -80,20 +80,25 @@ const Layout = ({ children, location }) => {
             Skip to Content
           </a>
 
-          {isLoading && isHome ? (
-            <Loader finishLoading={() => setIsLoading(false)} />
-          ) : (
-            <StyledContent>
-              <Nav isHome={isHome} />
-              <Social isHome={isHome} />
-              <Email isHome={isHome} />
+          {isLoading && isHome && <Loader finishLoading={() => setIsLoading(false)} />}
 
-              <div id="content">
-                {children}
-                <Footer />
-              </div>
-            </StyledContent>
-          )}
+          {/*
+            Rendered unconditionally so the static HTML actually contains the page.
+            Gating this behind the loader meant public/index.html shipped nothing but
+            the loader div, leaving the homepage with no crawlable body text.
+            The key flip remounts the tree when the loader finishes, which replays the
+            staggered entrance animations exactly as before.
+          */}
+          <StyledContent key={isLoading && isHome ? 'loading' : 'loaded'}>
+            <Nav isHome={isHome} />
+            <Social isHome={isHome} />
+            <Email isHome={isHome} />
+
+            <div id="content">
+              {children}
+              <Footer />
+            </div>
+          </StyledContent>
         </ThemeProvider>
       </div>
     </>

@@ -1,5 +1,0 @@
-{
-    "componentChunkName": "component---src-templates-blog-tag-js",
-    "path": "/blog/tags/ai/",
-    "result": {"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"frontmatter":{"title":"Multi-Agent RL Approach to Traffic Management","description":"Exploring how multi-agent reinforcement learning can revolutionize traffic management systems","slug":"/blog/multi-agent-rl-traffic-management","date":"2024-10-15"}}}]}},"pageContext":{"tag":"AI"}},
-    "staticQueryHashes": ["1994492073","2009693873","3825832676","4162897811"]}

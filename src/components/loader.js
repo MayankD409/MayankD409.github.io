@@ -15,7 +15,12 @@ const StyledLoader = styled.div`
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(10, 25, 47, 0.85);
+  /*
+    Opaque now that the page renders behind the loader instead of in place of it.
+    This is exactly rgba(10, 25, 47, 0.85) composited over the --navy page
+    background, so the loading screen looks identical to before.
+  */
+  background-color: #2c3749;
   z-index: 99;
 
   .logo-wrapper {

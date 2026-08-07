@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-
-User-agent: *
-Disallow: /404
-Sitemap: https://mayankd.me/sitemap/sitemap-index.xml
-Host: https://mayankd.me
