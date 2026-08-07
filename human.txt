@@ -5,12 +5,12 @@ Description: Personal website of Mayank Deshpande
 Keywords: Mayank Deshpande, robotics, computer vision, AI, Software engineer
 Language: English
 Author: Mayank Deshpande
-Contact: mayank [at] domain.com
-LinkedIn: https://www.linkedin.com/in/mayank-deshpande
+Contact: msdeshp4 [at] umd.edu
+LinkedIn: https://www.linkedin.com/in/msdeshpande04/
 GitHub: https://github.com/MayankD409
 Twitter: @Mayank_D04
 
 /* TECHNOLOGY */
 Built with: Gatsby, React, JavaScript
-Hosting: Netlify
-Last Updated: 2023-09 
+Hosting: GitHub Pages
+Last Updated: 2026-08 
