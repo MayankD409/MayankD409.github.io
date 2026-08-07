@@ -251,43 +251,26 @@ const StyledProject = styled.li`
       opacity: 0.25; // faint backdrop so the dark card text stays readable
     }
 
+    /*
+      Covers render at full colour. Upstream tints them by stacking a --navy
+      :before over a --green backing and desaturating the image, then clears it
+      all on hover; that whole mechanism is gone. Hover feedback comes from the
+      boxShadow mixin above, and focus rings come from the global :focus-visible.
+    */
     a {
       width: 100%;
       height: 100%;
-      background-color: var(--green);
       border-radius: var(--border-radius);
       vertical-align: middle;
-
-      /*
-        No :before overlay here. Upstream paints one in --navy and relies on
-        mix-blend-mode: screen to turn it into a tint; with the blend modes
-        dropped for the light theme it is just an opaque block covering the
-        cover image. The tint now comes from --green showing through the
-        partly transparent image instead.
-      */
-      &:hover,
-      &:focus {
-        background: transparent;
-        outline: 0;
-
-        .img {
-          filter: none;
-          opacity: 1;
-        }
-      }
     }
 
     .img {
       border-radius: var(--border-radius);
 
-      filter: grayscale(100%) contrast(1) brightness(90%);
-      opacity: 0.85; /* lets --green through as a warm tint; 1 on hover */
-
       @media (max-width: 768px) {
         object-fit: cover;
         width: 100%;
         height: 100%;
-        filter: grayscale(100%) contrast(1) brightness(115%);
       }
     }
   }
