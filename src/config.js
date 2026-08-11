@@ -1,7 +1,7 @@
 // VISITED BUT PLAY AROUND WITH THIS
 
 module.exports = {
-  email: 'msdeshp4@umd.edu',
+  email: 'deshpandemayank5@gmail.com',
 
   socialMedia: [
     {
