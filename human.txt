@@ -5,7 +5,7 @@ Description: Personal website of Mayank Deshpande
 Keywords: Mayank Deshpande, robotics, computer vision, AI, Software engineer
 Language: English
 Author: Mayank Deshpande
-Contact: msdeshp4 [at] umd.edu
+Contact: deshpandemayank5 [at] gmail.com
 LinkedIn: https://www.linkedin.com/in/msdeshpande04/
 GitHub: https://github.com/MayankD409
 Twitter: @Mayank_D04
