@@ -1,17 +1,22 @@
-name: Deploy Gatsby site to GitHub Pages
+name: Deploy dev to GitHub Pages
 
+# Manual-only. Run it from the Actions tab (or `gh workflow run deploy.yml`)
+# when dev is ready to go live. Merging a PR into dev no longer deploys by
+# itself; this button is the release step.
 on:
-  push:
-    branches:
-      - dev
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      # Pinned to dev so the button always deploys dev, no matter which
+      # branch the run was started from.
+      - name: Checkout dev
         uses: actions/checkout@v4
+        with:
+          ref: dev
 
       # Node 18 no longer builds this: undici (a transitive dependency) needs the
       # global File constructor, which only exists from Node 20 onward.
