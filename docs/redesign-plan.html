@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mayankd.me rebuild — plan</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-2: #1c2230;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --good: #3fb950;
+    --warn: #f59e0b;
+    --bad: #f85149;
+    --code-bg: #0b0f15;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    font-size: 15px;
+  }
+  .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+  nav.toc {
+    background: var(--surface); border-right: 1px solid var(--border);
+    padding: 24px 18px; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  nav.toc h2 {
+    margin: 0 0 12px; font-size: 13px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted);
+  }
+  nav.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: section; }
+  nav.toc li { counter-increment: section; margin: 0 0 6px; }
+  nav.toc li a {
+    color: var(--muted); text-decoration: none; font-size: 13.5px; display: block;
+    padding: 3px 6px; border-radius: 6px;
+  }
+  nav.toc li a::before { content: counter(section) ". "; color: var(--accent); }
+  nav.toc li a:hover { color: var(--text); background: var(--surface-2); }
+  main { padding: 36px 48px 80px; max-width: 900px; }
+  header.doc-head { margin-bottom: 28px; }
+  header.doc-head h1 { margin: 0 0 6px; font-size: 26px; line-height: 1.2; }
+  header.doc-head .sub { color: var(--muted); font-size: 14px; }
+  h2 {
+    font-size: 20px; margin: 44px 0 10px; padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  h2 .anchor-link { color: var(--border); text-decoration: none; margin-left: 6px; }
+  h2 .anchor-link:hover { color: var(--accent); }
+  h3 { font-size: 15.5px; margin: 22px 0 6px; }
+  p { margin: 0 0 12px; max-width: 74ch; }
+  p.claim { color: var(--muted); font-size: 16px; margin-bottom: 16px; }
+  a { color: var(--accent); }
+  code {
+    font-family: ui-monospace, "JetBrains Mono", "Fira Code", monospace;
+    font-size: 13px; background: var(--code-bg); padding: 1px 5px;
+    border-radius: 5px; border: 1px solid var(--border);
+  }
+  table { border-collapse: collapse; margin: 12px 0 18px; width: 100%; font-size: 13.5px; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--surface); font-weight: 600; }
+  td { background: rgba(255,255,255,0.015); }
+  .callout {
+    border-left: 3px solid var(--accent); background: #1a2738;
+    padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 14px 0; max-width: 74ch;
+  }
+  .callout.warn { border-left-color: var(--warn); background: #2a2418; }
+  .callout.good { border-left-color: var(--good); background: #182a1c; }
+  .callout .t { font-weight: 600; font-size: 13px; display: block; margin-bottom: 3px; }
+  .pill {
+    display: inline-block; padding: 2px 9px; border-radius: 999px;
+    font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; vertical-align: 1px;
+  }
+  .pill.done { background: rgba(63,185,80,0.15); color: var(--good); }
+  .pill.next { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .pill.later { background: rgba(139,148,158,0.15); color: var(--muted); }
+  .swatch {
+    display: inline-block; width: 13px; height: 13px; border-radius: 3px;
+    border: 1px solid var(--border); vertical-align: -2px; margin-right: 6px;
+  }
+  ul { max-width: 74ch; }
+  li { margin-bottom: 5px; }
+  footer.doc-foot { margin-top: 56px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--border); padding-top: 14px; }
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+    main { padding: 24px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#why">Why the site gets rebuilt</a></li>
+    <li><a href="#stack">The stack: Astro 5</a></li>
+    <li><a href="#look">The look: dark, one accent, Geist</a></li>
+    <li><a href="#ux">Navigation people don't have to think about</a></li>
+    <li><a href="#refs">References, and what each contributes</a></li>
+    <li><a href="#repos">One site repo, one repo per lab</a></li>
+    <li><a href="#phases">The plan, phase by phase</a></li>
+    <li><a href="#rules">Rules that don't bend</a></li>
+    <li><a href="#open">Open questions</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="doc-head">
+  <h1>mayankd.me rebuild — plan</h1>
+  <div class="sub">Working doc on the <code>redesign</code> branch. The old site keeps deploying from <code>dev</code> until Phase 1 ships. Companion file: <a href="ui-scaffold.html">ui-scaffold.html</a> — the visual half of this plan, meant to be opened in a browser and argued with.</div>
+</header>
+
+<h2 id="why">1. Why the site gets rebuilt<a class="anchor-link" href="#why">#</a></h2>
+<p class="claim">The current site runs on a framework that stopped moving in 2023, on a 2020 template that keeps biting.</p>
+<p>The stack is Gatsby 3 on React 17. Gatsby has been in maintenance since Netlify absorbed the team, and <code>npm audit</code> reports 89 findings against the dependency tree. None of that is an emergency for a static site, but every hour spent on it goes into keeping an old framework alive, and the interactive labs I want to build would fight it the whole way.</p>
+<p>The design has a second problem: it started as Brittany Chiang's dark-navy v4 template and was hand-converted to a cream light theme. The conversion left dark-theme assumptions buried in the CSS. Three separate bugs on the featured-project covers traced back to that half-converted state, including white-on-cream text at 1.08:1 contrast. I also just don't like the cream theme anymore.</p>
+<p>Decisions were locked on 2026-08-07: Astro 5, dual theme with dark as default, a single dense homepage with a command palette, GitHub Pages stays. <code>REDESIGN.md</code> in this folder holds the token-level spec; this doc holds the full plan.</p>
+
+<h2 id="stack">2. The stack: Astro 5<a class="anchor-link" href="#stack">#</a></h2>
+<p class="claim">Astro because the site is mostly content, and the parts that aren't content should be islands.</p>
+<table>
+  <tr><th>Layer</th><th>Choice</th><th>Reason</th></tr>
+  <tr><td>Framework</td><td>Astro 5 + TypeScript</td><td>Content collections give the existing <code>content/</code> markdown typed schemas. Pages ship zero JS unless a component asks for it.</td></tr>
+  <tr><td>Interactive bits</td><td>React 19 islands</td><td>Command palette (<code>cmdk</code>), theme toggle, lab embeds. Nothing else hydrates.</td></tr>
+  <tr><td>Styling</td><td>Tailwind CSS v4</td><td>Tokens live in one <code>@theme</code> block. shadcn/ui primitives inside islands where they earn their place.</td></tr>
+  <tr><td>Posts</td><td>MDX</td><td>Interactive widgets inline with prose, the way Maxime Heckel's articles work.</td></tr>
+  <tr><td>Motion</td><td>Motion + Astro view transitions</td><td>150–250 ms, ease-out, honors <code>prefers-reduced-motion</code>.</td></tr>
+  <tr><td>Hosting</td><td>GitHub Pages, same CNAME</td><td>DNS already works. Cloudflare Pages becomes interesting only when a lab needs a Worker proxy.</td></tr>
+</table>
+<p>Why not Next.js, which is what eddyhdzg.com and Brittany's v5 use: it wants Vercel to shine, it ships a React runtime that plain content pages don't need, and every pattern I want from those sites (palette, cards, heatmap) works the same inside an Astro island. I'm not applying for frontend jobs; the stack should serve the labs and the writing.</p>
+<div class="callout">
+  <span class="t">Carry-overs from operating the old site</span>
+  The build must emit <code>CNAME</code> (in Astro: <code>public/CNAME</code>). The domain 404'd for an hour once because CNAME lived only in committed build output. Lockfile gets committed from day one and CI installs with <code>npm ci</code> — the old site broke after 15 months of floating dependencies. Node version pinned in <code>.nvmrc</code>, CI reads it from there.
+</div>
+
+<h2 id="look">3. The look: dark, one accent, Geist<a class="anchor-link" href="#look">#</a></h2>
+<p class="claim">Dark by default, one azure accent, Geist type, and a point-cloud motif because that's the actual job.</p>
+<table>
+  <tr><th>Token</th><th>Dark (default)</th><th>Light</th></tr>
+  <tr><td>Background</td><td><span class="swatch" style="background:#0B0E14"></span><code>#0B0E14</code></td><td><span class="swatch" style="background:#FBFBFC"></span><code>#FBFBFC</code></td></tr>
+  <tr><td>Card</td><td><span class="swatch" style="background:#111520"></span><code>#111520</code></td><td><span class="swatch" style="background:#F3F4F7"></span><code>#F3F4F7</code></td></tr>
+  <tr><td>Border</td><td><span class="swatch" style="background:#1E2433"></span><code>#1E2433</code></td><td><span class="swatch" style="background:#E3E6EC"></span><code>#E3E6EC</code></td></tr>
+  <tr><td>Text</td><td><span class="swatch" style="background:#E6EAF2"></span><code>#E6EAF2</code></td><td><span class="swatch" style="background:#171B26"></span><code>#171B26</code></td></tr>
+  <tr><td>Muted text</td><td><span class="swatch" style="background:#8A93A6"></span><code>#8A93A6</code></td><td><span class="swatch" style="background:#5A6372"></span><code>#5A6372</code></td></tr>
+  <tr><td>Accent</td><td><span class="swatch" style="background:#5B8DF5"></span><code>#5B8DF5</code></td><td><span class="swatch" style="background:#3B6EE0"></span><code>#3B6EE0</code></td></tr>
+</table>
+<p>Type is Geist Sans for everything readable and Geist Mono for metadata, labels, and code. Both are free and self-hosted as woff2. The accent values are mine, picked in the family of Maxime Heckel's blues — his exact tokens render behind JS and weren't worth chasing, and copying hexes was never the point.</p>
+<p>The one visual signature is a point-cloud canvas in the hero: drifting points that occasionally organize into a box wireframe and let go again. Plain 2D canvas, under 15 KB of script, static scatter for anyone with reduced motion. Three.js never loads on the homepage; it belongs to the labs. Homepage hydrated JS stays under 100 KB total.</p>
+<p>Contrast floor is 4.5:1 for body text and 3:1 for large text, checked at review time on every color pair. The old site shipped invisible text twice. Not again.</p>
+
+<h2 id="ux">4. Navigation people don't have to think about<a class="anchor-link" href="#ux">#</a></h2>
+<p class="claim">A visitor should know who I am in five seconds and reach anything on the site in one or two clicks, without learning anything.</p>
+<p>The research behind this section is Nielsen Norman Group material on <a href="https://www.nngroup.com/videos/recognition-vs-recall/">recognition versus recall</a> and <a href="https://www.nngroup.com/articles/navigation-you-are-here/">"you are here" cues</a>. The short version: people pick from what they can see far more easily than they remember what exists, and a site has to keep telling them where they currently are.</p>
+<h3>What that means concretely</h3>
+<ul>
+  <li><b>Visible, labeled nav.</b> Text links on desktop — About, Experience, Labs, Writing — plus a Resume button. No icon-only navigation, no hamburger above 768 px.</li>
+  <li><b>The ⌘K palette is an accelerator, never the only path.</b> Everything the palette reaches is also reachable through a visible link. Search supplements browsing; it doesn't replace it.</li>
+  <li><b>You-are-here cues.</b> The nav highlights the section currently in view as you scroll. Every route gets a distinct page title. URLs stay readable. The name in the top-left always goes home.</li>
+  <li><b>The five-second test.</b> Name, role, employer, and the resume button all sit above the fold. A recruiter arriving cold should not have to scroll to learn who I am.</li>
+  <li><b>Resume is one click from anywhere.</b> Nav button, palette entry, footer link — all point at the same <code>/resume.pdf</code>.</li>
+  <li><b>Mobile is not an afterthought.</b> Tap targets at 44 px minimum, nothing hidden behind hover, menu reachable by thumb, layout tested at 360 px wide.</li>
+  <li>And speed. Static HTML with actual content in it (the old homepage shipped an empty loader div), fonts with <code>font-display: swap</code>, no layout shift.</li>
+</ul>
+<p>The test worth running after Phase 1: show someone a single page cold and ask "where are you on this site?" If they can't answer from the visible cues, the cues are too subtle.</p>
+
+<h2 id="refs">5. References, and what each contributes<a class="anchor-link" href="#refs">#</a></h2>
+<p class="claim">Eight sites, one specific thing taken from each. The scaffold starts from eddyhdzg and layers the rest in.</p>
+<table>
+  <tr><th>Site</th><th>What it is</th><th>What we take</th></tr>
+  <tr><td><a href="https://eddyhdzg.com">eddyhdzg.com</a></td><td>Austin engineer, Next.js. Source is private; patterns rebuilt from public parts.</td><td>The ⌘K palette as navigation spine, card metadata discipline, Geist, the GitHub heatmap, <code>llms.txt</code>.</td></tr>
+  <tr><td><a href="https://rauno.me">rauno.me</a></td><td>Interaction designer</td><td>The Craft page concept — our <code>/labs</code> — and the copy-email micro-interaction.</td></tr>
+  <tr><td><a href="https://blog.maximeheckel.com">blog.maximeheckel.com</a></td><td>WebGL/shader writer</td><td>Blue-family palette direction, and MDX posts with live demos inside them.</td></tr>
+  <tr><td><a href="https://brittanychiang.com">brittanychiang.com</a></td><td>v5 from the author of our old template</td><td>Single-page layout, the experience timeline, spotlight hover, tag chips.</td></tr>
+  <tr><td><a href="https://www.joshwcomeau.com">joshwcomeau.com</a></td><td>Interactive-explainer blog</td><td>Post-as-playground, and theming done right.</td></tr>
+  <tr><td><a href="https://emilkowal.ski">emilkowal.ski</a></td><td>Design engineer, Linear</td><td>Text-forward hierarchy; writing as a first-class section.</td></tr>
+  <tr><td><a href="https://antfu.me">antfu.me</a></td><td>Open-source hub</td><td>Restraint. The generative touch stays subtle and the content leads.</td></tr>
+  <tr><td>bruno-simon.com</td><td>The drive-a-car 3D portfolio</td><td>The boundary. 3D lives in labs, never in the shell.</td></tr>
+</table>
+
+<h2 id="repos">6. One site repo, one repo per lab<a class="anchor-link" href="#repos">#</a></h2>
+<p class="claim">This repo becomes shell and hosting only. Every lab lives in its own repo and hands the site either data or a built bundle.</p>
+<p>Keeping lab code out of the site repo means a lab can have its own CI, its own secrets, its own release pace, and a README that stands alone — each one is a portfolio piece in repo form too. The site consumes labs through two narrow contracts:</p>
+<table>
+  <tr><th>Repo</th><th>What lives there</th><th>What the site consumes</th></tr>
+  <tr><td><code>MayankD409.github.io</code></td><td>Astro site, content, hosting, this docs folder</td><td>—</td></tr>
+  <tr><td><code>fund-of-one</code></td><td>Trading agent, Actions cron, guardrails, memo history</td><td>JSON fetched client-side from the repo's raw files. GitHub serves those with open CORS, so the fund page stays current without rebuilding the site.</td></tr>
+  <tr><td><code>sensor-lab</code></td><td>Depth-model demo: webcam to point cloud to geometry toggles</td><td>A built static bundle, vendored into <code>/labs/sensor-lab/</code> at site build time.</td></tr>
+  <tr><td><code>mini-unloader</code></td><td>Synthetic container scene with the staged perception pipeline</td><td>Same bundle contract as sensor-lab.</td></tr>
+</table>
+<p>API keys (Alpaca, LLM) exist only as Actions secrets in the lab repos. The site never holds a secret and never talks to a paid API from the browser.</p>
+
+<h2 id="phases">7. The plan, phase by phase<a class="anchor-link" href="#phases">#</a></h2>
+<p class="claim">Phase 1 replaces the stack and the UI. Every phase after that is one lab. The shell gets four weekends, hard cap.</p>
+
+<h3>Phase 0 — setup <span class="pill done">done</span></h3>
+<p><code>legacy-gatsby</code> branch frozen at the last Gatsby commit. Work happens on <code>redesign</code>. This doc and the scaffold live in <code>docs/</code>.</p>
+
+<h3>Phase 1 — stack + UI <span class="pill next">next</span></h3>
+<ol>
+  <li>Iterate on <a href="ui-scaffold.html">ui-scaffold.html</a> until the design feels right in the browser. Cheap to change now, expensive later.</li>
+  <li>Scaffold Astro 5 with Tailwind v4, the token file, and both themes.</li>
+  <li>Port <code>content/</code> into typed collections: jobs, projects, featured, posts.</li>
+  <li>Build the components: nav with active-section highlight, palette, hero canvas, experience timeline, labs grid, writing list, footer.</li>
+  <li>SEO carry-over, item by item: JSON-LD person (job title, Contoro, the msdeshpande04 LinkedIn), Google verification meta, analytics tag, sitemap, robots, CNAME emission, og image regenerated in the new brand, 404 page.</li>
+  <li>Parity QA: every old route resolves or redirects (<code>/blog/*</code> slugs unchanged, <code>/pensieve/*</code> redirects to <code>/blog</code>), Lighthouse 95+ on mobile and desktop, the five-second test on a stranger.</li>
+  <li>Swap: point the deploy workflow at the Astro build, merge to <code>dev</code>, verify the live domain, resume, and structured data. Tag the old site.</li>
+</ol>
+<p>Definition of done: the new site is live on mayankd.me with nothing lost — every URL, every meta tag, the resume, the domain.</p>
+
+<h3>Phase 2 — Fund-of-One <span class="pill later">own repo</span></h3>
+<p>An autonomous paper-trading fund with a public audit trail. A GitHub Actions cron runs before market open: pull prices and headlines, have the agent write a decision memo, execute through Alpaca's paper API, commit portfolio state and memo as JSON. The site's fund page renders the equity curve against SPY, current holdings, risk numbers, and the full memo archive. Guardrails — position caps, no leverage, a kill switch — are part of the exhibit.</p>
+<p>This phase can start before Phase 1 finishes. Its value grows with calendar time: a fund that has been running for six months with every decision logged is a different artifact from a demo finished yesterday. Real brokerages stay out of it — Robinhood has no official API, and paper trading is the honest version anyway.</p>
+
+<h3>Phase 3 — Live Sensor Lab <span class="pill later">own repo</span></h3>
+<p>Your room as a robot sees it. Webcam frames run through a small depth model in the browser (WebGPU, WASM fallback), get back-projected into a point cloud you can orbit, and then the real content starts: RANSAC plane extraction, clustering, voxel downsampling, a flying-pixel filter at depth edges, simulated dropout on dark surfaces — each one a toggle with a sentence on why it matters on a real robot. A bundled sample clip covers visitors who skip the camera permission.</p>
+
+<h3>Phase 4 — Mini Unloader <span class="pill later">own repo</span></h3>
+<p>A miniature of the day job, built from public parts. A synthetic shipping container with randomized box piles, a rendered depth camera, and the pipeline shown stage by stage: raw cloud, planes, instances, pick pose, arm executes, repeat until empty. The panel that sells it: break the sensor on purpose — noise, dropout, a two-degree calibration tilt — and watch which stage fails.</p>
+
+<h3>Phase 5 — stretch</h3>
+<p>Poke-the-Robot (a browser physics sim with a trained locomotion policy you can shove), Click-to-Measure (segment an object, get metric dimensions from the fitted plane), and a site chatbot over the lab writeups once there are enough of them to be worth asking about.</p>
+
+<h2 id="rules">8. Rules that don't bend<a class="anchor-link" href="#rules">#</a></h2>
+<div class="callout warn">
+  <span class="t">Nothing from Contoro, ever</span>
+  No data, models, meshes, parameters, or scene geometry from work appears in anything public. Labs use synthetic scenes and public datasets, built on personal time and hardware.
+</div>
+<ul>
+  <li>Homepage hydrated JS under 100 KB. Three.js loads only inside labs.</li>
+  <li>Every color pair gets a contrast check at review. 4.5:1 body, 3:1 large.</li>
+  <li>Site copy is written in my site voice — casual, with asides. Not resume voice, not PR voice. Any text that reads machine-written gets rewritten before it ships.</li>
+  <li>The four-weekend cap on Phase 1 is real. If it hits, ship what exists and move to the labs — they're the part nobody else has.</li>
+</ul>
+
+<h2 id="open">9. Open questions<a class="anchor-link" href="#open">#</a></h2>
+<ul>
+  <li>og.png rebrand: regenerate during Phase 1, or after the labs give it something to show?</li>
+  <li>The GitHub contribution heatmap: fetch at build time (stale between deploys) or render client-side from the public API? Build-time is the current lean.</li>
+  <li>Lab repo names: <code>fund-of-one</code>, <code>sensor-lab</code>, <code>mini-unloader</code> — confirm before creating them.</li>
+  <li>Does the old <code>/pensieve</code> content deserve migrating, or is a redirect enough?</li>
+</ul>
+
+<footer class="doc-foot">
+  Last updated 2026-08-14 · lives at <code>docs/redesign-plan.html</code> on the <code>redesign</code> branch · token spec: <code>docs/REDESIGN.md</code> · visual companion: <a href="ui-scaffold.html">ui-scaffold.html</a>
+</footer>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mayankd.me — UI scaffold v1</title>
+<script>
+  // Pre-paint theme read so there is no flash. Same trick the real site will use.
+  try {
+    var t = localStorage.getItem('scaffold-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root, [data-theme="dark"] {
+    --bg: #0B0E14;
+    --card: #111520;
+    --border: #1E2433;
+    --text: #E6EAF2;
+    --muted: #8A93A6;
+    --faint: #5C6575;
+    --accent: #5B8DF5;
+    --accent-hover: #7DA5F8;
+    --accent-soft: rgba(91,141,245,0.12);
+    --spot: rgba(91,141,245,0.08);
+  }
+  [data-theme="light"] {
+    --bg: #FBFBFC;
+    --card: #F3F4F7;
+    --border: #E3E6EC;
+    --text: #171B26;
+    --muted: #5A6372;
+    --faint: #8B93A2;
+    --accent: #3B6EE0;
+    --accent-hover: #2E5CC5;
+    --accent-soft: rgba(59,110,224,0.10);
+    --spot: rgba(59,110,224,0.07);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .mono { font-family: "Geist Mono", ui-monospace, "JetBrains Mono", monospace; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .skip {
+    position: absolute; left: -9999px; top: 0; background: var(--accent);
+    color: #fff; padding: 8px 14px; border-radius: 0 0 8px 0; z-index: 100;
+  }
+  .skip:focus { left: 0; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- nav ---------- */
+  header.site {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    display: flex; align-items: center; gap: 8px;
+    height: 60px; max-width: 1080px; margin: 0 auto; padding: 0 24px;
+  }
+  .nav .home {
+    font-family: "Geist Mono", monospace; font-weight: 500; font-size: 14px;
+    color: var(--text); margin-right: auto; letter-spacing: 0.01em;
+  }
+  .nav .links { display: flex; gap: 2px; }
+  .nav .links a {
+    color: var(--muted); font-size: 14px; padding: 6px 10px; border-radius: 8px;
+  }
+  .nav .links a:hover { color: var(--text); background: var(--card); }
+  .nav .links a.active { color: var(--text); background: var(--accent-soft); }
+  .kbd-hint {
+    display: inline-flex; align-items: center; gap: 5px;
+    border: 1px solid var(--border); border-radius: 8px; padding: 5px 9px;
+    color: var(--muted); font-size: 12.5px; background: var(--card); cursor: pointer;
+    font-family: "Geist Mono", monospace;
+  }
+  .kbd-hint:hover { color: var(--text); border-color: var(--faint); }
+  .kbd-hint kbd {
+    font-family: inherit; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 0 4px; font-size: 11px;
+  }
+  .theme-btn {
+    border: 1px solid var(--border); background: var(--card); color: var(--muted);
+    width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .theme-btn:hover { color: var(--text); border-color: var(--faint); }
+  .resume-btn {
+    border: 1px solid var(--accent); color: var(--accent); border-radius: 8px;
+    padding: 6px 14px; font-size: 13.5px; font-weight: 500; margin-left: 4px;
+  }
+  .resume-btn:hover { background: var(--accent-soft); color: var(--accent); }
+  @media (max-width: 820px) {
+    .nav .links { display: none; } /* real build: bottom sheet; scaffold keeps ⌘K + resume */
+  }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; overflow: hidden; }
+  .hero .wrap {
+    min-height: min(88vh, 760px); display: flex; flex-direction: column;
+    justify-content: center; padding-top: 48px; padding-bottom: 48px;
+  }
+  #cloud {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; opacity: 0.9;
+  }
+  .hero-inner { position: relative; max-width: 640px; }
+  .eyebrow {
+    font-family: "Geist Mono", monospace; font-size: 12.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+  }
+  h1.name { font-size: clamp(38px, 6vw, 60px); line-height: 1.05; margin: 0 0 18px; font-weight: 700; letter-spacing: -0.02em; }
+  .hero p { color: var(--muted); font-size: 17.5px; max-width: 56ch; margin: 0 0 12px; }
+  .hero p b, .hero p strong { color: var(--text); font-weight: 600; }
+  .hero-cta { display: flex; gap: 12px; margin-top: 26px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; border-radius: 10px;
+    padding: 10px 18px; font-size: 14.5px; font-weight: 500; border: 1px solid transparent;
+  }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary:hover { background: var(--accent-hover); color: #fff; }
+  .btn.ghost { border-color: var(--border); color: var(--text); background: var(--card); }
+  .btn.ghost:hover { border-color: var(--faint); }
+
+  /* ---------- sections ---------- */
+  section.block { padding: 72px 0; border-top: 1px solid var(--border); position: relative; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 30px; }
+  .sec-head h2 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+  .sec-head .count { font-family: "Geist Mono", monospace; font-size: 12.5px; color: var(--faint); }
+
+  /* experience */
+  .xp { display: flex; flex-direction: column; gap: 6px; }
+  .xp-row {
+    display: grid; grid-template-columns: 150px 1fr; gap: 18px;
+    padding: 18px 16px; border-radius: 12px;
+  }
+  .xp-row:hover { background: var(--card); }
+  .xp-when { font-family: "Geist Mono", monospace; font-size: 12.5px; color: var(--faint); padding-top: 3px; }
+  .xp-role { font-weight: 600; font-size: 16px; }
+  .xp-role .at { color: var(--accent); font-weight: 600; }
+  .xp-desc { color: var(--muted); font-size: 14.5px; margin: 4px 0 10px; max-width: 62ch; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-family: "Geist Mono", monospace; font-size: 11.5px; color: var(--accent);
+    background: var(--accent-soft); border-radius: 999px; padding: 3px 10px;
+  }
+  @media (max-width: 640px) { .xp-row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* labs */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    position: relative; background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px; overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .card:hover { transform: translateY(-3px); border-color: var(--faint); }
+  }
+  .card::after {
+    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity 0.25s ease;
+    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 70%);
+    pointer-events: none;
+  }
+  .card:hover::after { opacity: 1; }
+  .card h3 { margin: 0 0 8px; font-size: 16.5px; display: flex; align-items: center; gap: 10px; }
+  .card p { color: var(--muted); font-size: 14px; margin: 0 0 16px; }
+  .card .meta { font-family: "Geist Mono", monospace; font-size: 11.5px; color: var(--faint); }
+  .pill {
+    font-family: "Geist Mono", monospace; font-size: 10.5px; font-weight: 500;
+    border-radius: 999px; padding: 2px 9px; letter-spacing: 0.03em;
+  }
+  .pill.building { background: rgba(86,211,100,0.13); color: #56d364; }
+  [data-theme="light"] .pill.building { background: rgba(22,140,60,0.12); color: #168c3c; }
+  .pill.planned { background: var(--accent-soft); color: var(--accent); }
+
+  /* writing */
+  .posts { display: flex; flex-direction: column; }
+  .post {
+    display: flex; align-items: baseline; gap: 16px; padding: 15px 16px;
+    border-radius: 12px; color: var(--text);
+  }
+  .post:hover { background: var(--card); color: var(--text); }
+  .post .title { font-weight: 500; font-size: 15.5px; }
+  .post .date { font-family: "Geist Mono", monospace; font-size: 12px; color: var(--faint); margin-left: auto; white-space: nowrap; }
+
+  /* about */
+  .about p { color: var(--muted); max-width: 64ch; }
+  .about p b { color: var(--text); font-weight: 600; }
+
+  /* footer */
+  footer.site {
+    border-top: 1px solid var(--border); padding: 56px 0 64px; text-align: center;
+  }
+  .email-copy {
+    font-family: "Geist Mono", monospace; font-size: 15px; color: var(--text);
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 18px; cursor: pointer;
+  }
+  .email-copy:hover { border-color: var(--faint); }
+  .socials { display: flex; gap: 18px; justify-content: center; margin: 22px 0 26px; }
+  .socials a { color: var(--muted); font-size: 14px; }
+  .socials a:hover { color: var(--text); }
+  .colophon { color: var(--faint); font-size: 12.5px; font-family: "Geist Mono", monospace; }
+
+  /* ---------- command palette ---------- */
+  .palette-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90;
+    display: none; align-items: flex-start; justify-content: center; padding-top: 14vh;
+  }
+  .palette-backdrop.open { display: flex; }
+  .palette {
+    width: min(560px, calc(100vw - 32px)); background: var(--card);
+    border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+  }
+  .palette input {
+    width: 100%; border: 0; outline: 0; background: transparent; color: var(--text);
+    font: inherit; font-size: 15.5px; padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .palette ul { list-style: none; margin: 0; padding: 6px; max-height: 320px; overflow-y: auto; }
+  .palette li {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    border-radius: 9px; cursor: pointer; font-size: 14.5px; color: var(--text);
+  }
+  .palette li .hint { margin-left: auto; font-family: "Geist Mono", monospace; font-size: 11.5px; color: var(--faint); }
+  .palette li.sel { background: var(--accent-soft); }
+  .palette .empty { color: var(--faint); padding: 14px; font-size: 14px; }
+
+  /* ---------- scaffold notes mode ---------- */
+  .notes-btn {
+    position: fixed; right: 18px; bottom: 18px; z-index: 80;
+    font-family: "Geist Mono", monospace; font-size: 12px;
+  }
+  .note {
+    display: none; margin: 0 0 22px; padding: 10px 14px; max-width: 74ch;
+    border: 1px dashed var(--accent); border-radius: 10px;
+    color: var(--accent); font-size: 13px; background: var(--accent-soft);
+  }
+  body.notes-on .note { display: block; }
+  body.notes-on section.block, body.notes-on .hero { outline: 1px dashed var(--border); outline-offset: -1px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#experience">Skip to content</a>
+
+<header class="site">
+  <nav class="nav" aria-label="Main">
+    <a class="home" href="#top">mayank deshpande</a>
+    <div class="links" id="navlinks">
+      <a href="#experience">Experience</a>
+      <a href="#labs">Labs</a>
+      <a href="#writing">Writing</a>
+      <a href="#about">About</a>
+    </div>
+    <button class="kbd-hint" id="kbtn" aria-label="Open command palette"><kbd>⌘</kbd><kbd>K</kbd></button>
+    <button class="theme-btn" id="themebtn" aria-label="Switch theme">◐</button>
+    <a class="resume-btn" href="https://mayankd.me/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+  </nav>
+</header>
+
+<div class="hero" id="top">
+  <canvas id="cloud" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="eyebrow">Robotics Perception Engineer · Contoro Robotics · Austin, TX</div>
+      <h1 class="name">Mayank Deshpande</h1>
+      <p>I build the stack that lets robots actually see what they're picking up — <b>cameras, LiDAR, segmentation models</b>, and a whole lot of <b>3D geometry</b>.</p>
+      <p>Off the clock my head is in <b>Multimodal and Embodied AI</b>, weekend <b>RAG projects</b>, and the markets.</p>
+      <div class="hero-cta">
+        <a class="btn primary" href="https://mayankd.me/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+        <a class="btn ghost" href="#labs">See the labs</a>
+      </div>
+      <div class="note" style="margin-top:22px">Note — five-second test: name, role, employer, and the resume button all sit above the fold. The point cloud is the one loud thing on the page; every few seconds it finds a box, which is the job description in one animation. Reduced motion gets a static scatter.</div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+<section class="block" id="experience">
+  <div class="sec-head"><h2>Experience</h2><span class="count">01</span></div>
+  <div class="note">Note — timeline rows over cards, like Brittany's v5. The chips carry the stack so each one-liner stays one line. Full detail lives in the resume, one click away.</div>
+  <div class="xp">
+    <div class="xp-row">
+      <div class="xp-when">2025 — now</div>
+      <div>
+        <div class="xp-role">Robotics Perception Engineer <span class="at">@ Contoro Robotics</span></div>
+        <p class="xp-desc">Own the perception stack for a fleet of autonomous box-unloading robots: RGB-D and LiDAR sensing, segmentation models, 6-DoF grasp poses, calibration, and the training loop that keeps it all working in the field.</p>
+        <div class="chips"><span class="chip">PyTorch</span><span class="chip">Detectron2</span><span class="chip">ROS</span><span class="chip">C++</span><span class="chip">Point Clouds</span><span class="chip">ONNX</span></div>
+      </div>
+    </div>
+    <div class="xp-row">
+      <div class="xp-when">2024</div>
+      <div>
+        <div class="xp-role">System Software Engineer Co-op <span class="at">@ Intuitive Surgical</span></div>
+        <p class="xp-desc">Optical flow for endoscope motion verification, and automation of the robot life-test pipeline.</p>
+        <div class="chips"><span class="chip">RAFT</span><span class="chip">Python</span><span class="chip">Computer Vision</span></div>
+      </div>
+    </div>
+    <div class="xp-row">
+      <div class="xp-when">2024</div>
+      <div>
+        <div class="xp-role">Research Assistant <span class="at">@ GAMMA Lab, UMD</span></div>
+        <p class="xp-desc">Pedestrian trajectory prediction at 2 ms inference, validated on a real robot in crowds.</p>
+        <div class="chips"><span class="chip">ST-GCNN</span><span class="chip">PyTorch</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="labs">
+  <div class="sec-head"><h2>Labs</h2><span class="count">02</span></div>
+  <div class="note">Note — the labs are why the site exists. Cards keep eddy's metadata discipline: status pill, plain description, mono stack line. Statuses stay honest; nothing pretends to be live before it is. Each lab is its own repo and its own page.</div>
+  <div class="grid" id="labgrid">
+    <div class="card">
+      <h3>Fund-of-One <span class="pill building">building</span></h3>
+      <p>An autonomous paper-trading fund that writes a memo for every trade it makes. Equity curve against SPY, every decision on the record.</p>
+      <div class="meta">GitHub Actions · Alpaca paper · LLM agent</div>
+    </div>
+    <div class="card">
+      <h3>Live Sensor Lab <span class="pill planned">planned</span></h3>
+      <p>Your room, as a robot sees it. Webcam depth in the browser, then the real stuff: plane fitting, clustering, flying-pixel filters.</p>
+      <div class="meta">WebGPU · ONNX Runtime · Canvas</div>
+    </div>
+    <div class="card">
+      <h3>Mini Unloader <span class="pill planned">planned</span></h3>
+      <p>A tiny version of my day job. Watch a pipeline pick a container empty, then break its sensor and see which stage fails.</p>
+      <div class="meta">three.js · WASM geometry · synthetic depth</div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="writing">
+  <div class="sec-head"><h2>Writing</h2><span class="count">03</span></div>
+  <div class="note">Note — one real post today, so the planned ones are labeled planned instead of faked. Every lab ships with a "how it works" writeup, which is where this section grows from.</div>
+  <div class="posts">
+    <a class="post" href="https://mayankd.me/blog/multi-agent-rl-traffic-management">
+      <span class="title">Multi-Agent RL Approach to Traffic Management</span>
+      <span class="date">Oct 2024</span>
+    </a>
+    <div class="post">
+      <span class="title" style="color:var(--muted)">How the sensor lab works &nbsp;<span class="pill planned">planned</span></span>
+      <span class="date">—</span>
+    </div>
+    <div class="post">
+      <span class="title" style="color:var(--muted)">Why depth cameras lie to you &nbsp;<span class="pill planned">planned</span></span>
+      <span class="date">—</span>
+    </div>
+  </div>
+</section>
+
+<section class="block about" id="about">
+  <div class="sec-head"><h2>About</h2><span class="count">04</span></div>
+  <div class="note">Note — site voice, short. The football/finance/startups line survives from the old site because it's the most me thing on it.</div>
+  <p>I absolutely love talking <b>Football, Finance, and Startups</b> — and honestly, life would've been way more exciting if I was already working in one of those <i>(but hey, I'm getting there!)</i>.</p>
+  <p>I did my Master's in Robotics at Maryland, and these days I'm a <b>Perception Engineer at Contoro Robotics</b>, teaching robots to see inside shipping containers. What hooked me on all of this was a course on <b>Multimodal Foundation Models</b>; that thread runs through everything in the labs above.</p>
+</section>
+
+</main>
+
+<footer class="site" id="contact">
+  <div class="wrap">
+    <button class="email-copy" id="emailbtn" title="Copy email">deshpandemayank5@gmail.com</button>
+    <div class="socials">
+      <a href="https://github.com/MayankD409" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/msdeshpande04/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://x.com/Mayank_D04" target="_blank" rel="noopener noreferrer">X</a>
+      <a href="https://medium.com/@deshpandemayank5" target="_blank" rel="noopener noreferrer">Medium</a>
+    </div>
+    <div class="colophon">ui-scaffold v1 · not the real site · iterate here, build in Astro</div>
+  </div>
+</footer>
+
+<button class="btn ghost notes-btn" id="notesbtn">Notes: off</button>
+
+<div class="palette-backdrop" id="pback" role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="palette">
+    <input id="pinput" type="text" placeholder="Type a command or search…" autocomplete="off">
+    <ul id="plist"></ul>
+  </div>
+</div>
+
+<script>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- theme ---------- */
+  var themeBtn = document.getElementById('themebtn');
+  function setTheme(t) {
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem('scaffold-theme', t); } catch (e) {}
+  }
+  function toggleTheme() {
+    setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+  }
+  themeBtn.addEventListener('click', toggleTheme);
+
+  /* ---------- active section highlight (the you-are-here cue) ---------- */
+  var links = document.querySelectorAll('#navlinks a');
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        links.forEach(function (a) { a.classList.remove('active'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-35% 0px -55% 0px' });
+  ['experience', 'labs', 'writing', 'about'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) io.observe(el);
+  });
+
+  /* ---------- spotlight hover on cards ---------- */
+  document.querySelectorAll('.card').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  /* ---------- email copy ---------- */
+  var emailBtn = document.getElementById('emailbtn');
+  emailBtn.addEventListener('click', function () {
+    navigator.clipboard.writeText('deshpandemayank5@gmail.com').then(function () {
+      var old = emailBtn.textContent;
+      emailBtn.textContent = 'copied ✓';
+      setTimeout(function () { emailBtn.textContent = old; }, 1200);
+    });
+  });
+
+  /* ---------- notes mode ---------- */
+  var notesBtn = document.getElementById('notesbtn');
+  function toggleNotes() {
+    document.body.classList.toggle('notes-on');
+    notesBtn.textContent = 'Notes: ' + (document.body.classList.contains('notes-on') ? 'on' : 'off');
+  }
+  notesBtn.addEventListener('click', toggleNotes);
+
+  /* ---------- command palette ---------- */
+  var pback = document.getElementById('pback');
+  var pinput = document.getElementById('pinput');
+  var plist = document.getElementById('plist');
+  var sel = 0;
+  var commands = [
+    { label: 'Go to Experience', hint: 'section', run: function () { location.hash = '#experience'; } },
+    { label: 'Go to Labs', hint: 'section', run: function () { location.hash = '#labs'; } },
+    { label: 'Go to Writing', hint: 'section', run: function () { location.hash = '#writing'; } },
+    { label: 'Go to About', hint: 'section', run: function () { location.hash = '#about'; } },
+    { label: 'Open Resume', hint: 'pdf', run: function () { window.open('https://mayankd.me/resume.pdf', '_blank', 'noopener'); } },
+    { label: 'Switch theme', hint: 'dark / light', run: toggleTheme },
+    { label: 'Toggle scaffold notes', hint: 'n', run: toggleNotes },
+    { label: 'GitHub', hint: 'social', run: function () { window.open('https://github.com/MayankD409', '_blank', 'noopener'); } },
+    { label: 'LinkedIn', hint: 'social', run: function () { window.open('https://www.linkedin.com/in/msdeshpande04/', '_blank', 'noopener'); } },
+    { label: 'Copy email', hint: 'contact', run: function () { navigator.clipboard.writeText('deshpandemayank5@gmail.com'); } }
+  ];
+  var filtered = commands.slice();
+
+  function renderList() {
+    plist.innerHTML = '';
+    if (!filtered.length) {
+      var d = document.createElement('div');
+      d.className = 'empty';
+      d.textContent = 'No matches.';
+      plist.appendChild(d);
+      return;
+    }
+    filtered.forEach(function (c, i) {
+      var li = document.createElement('li');
+      li.className = i === sel ? 'sel' : '';
+      var s = document.createElement('span'); s.textContent = c.label;
+      var h = document.createElement('span'); h.className = 'hint'; h.textContent = c.hint;
+      li.appendChild(s); li.appendChild(h);
+      li.addEventListener('click', function () { closePalette(); c.run(); });
+      li.addEventListener('mousemove', function () { sel = i; renderList(); });
+      plist.appendChild(li);
+    });
+  }
+  function openPalette() {
+    pback.classList.add('open');
+    pinput.value = ''; filtered = commands.slice(); sel = 0;
+    renderList(); pinput.focus();
+  }
+  function closePalette() { pback.classList.remove('open'); }
+  document.getElementById('kbtn').addEventListener('click', openPalette);
+  pback.addEventListener('click', function (e) { if (e.target === pback) closePalette(); });
+  pinput.addEventListener('input', function () {
+    var q = pinput.value.toLowerCase();
+    filtered = commands.filter(function (c) { return c.label.toLowerCase().indexOf(q) !== -1; });
+    sel = 0; renderList();
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      pback.classList.contains('open') ? closePalette() : openPalette();
+      return;
+    }
+    if (pback.classList.contains('open')) {
+      if (e.key === 'Escape') closePalette();
+      if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(sel + 1, filtered.length - 1); renderList(); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(sel - 1, 0); renderList(); }
+      if (e.key === 'Enter' && filtered[sel]) { closePalette(); filtered[sel].run(); }
+      return;
+    }
+    if (e.key.toLowerCase() === 'n' && !e.metaKey && !e.ctrlKey &&
+        document.activeElement.tagName !== 'INPUT') toggleNotes();
+  });
+
+  /* ---------- point-cloud hero ----------
+     Points drift freely; every few seconds they gather onto the edges of a
+     rotating box wireframe, hold, and let go. Finding boxes in point clouds
+     is the day job, so the one animation on the page is that. */
+  var canvas = document.getElementById('cloud');
+  var ctx = canvas.getContext('2d');
+  var W, H, dpr;
+  var N = 150;
+  var pts = [];
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var r = canvas.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Sample N points along the 12 edges of a unit cube.
+  var edges = [
+    [[-1,-1,-1],[ 1,-1,-1]], [[ 1,-1,-1],[ 1, 1,-1]], [[ 1, 1,-1],[-1, 1,-1]], [[-1, 1,-1],[-1,-1,-1]],
+    [[-1,-1, 1],[ 1,-1, 1]], [[ 1,-1, 1],[ 1, 1, 1]], [[ 1, 1, 1],[-1, 1, 1]], [[-1, 1, 1],[-1,-1, 1]],
+    [[-1,-1,-1],[-1,-1, 1]], [[ 1,-1,-1],[ 1,-1, 1]], [[ 1, 1,-1],[ 1, 1, 1]], [[-1, 1,-1],[-1, 1, 1]]
+  ];
+  var boxPts = [];
+  for (var i = 0; i < N; i++) {
+    var e = edges[i % 12];
+    var t = (Math.floor(i / 12) + 0.5) / Math.ceil(N / 12);
+    boxPts.push([
+      e[0][0] + (e[1][0] - e[0][0]) * t,
+      e[0][1] + (e[1][1] - e[0][1]) * t,
+      e[0][2] + (e[1][2] - e[0][2]) * t
+    ]);
+  }
+  for (var j = 0; j < N; j++) {
+    pts.push({
+      x: Math.random() * 1.4 - 0.2, y: Math.random(),        // drift home, in 0..1 space
+      vx: (Math.random() - 0.5) * 0.0004, vy: (Math.random() - 0.5) * 0.0004,
+      k: 0                                                    // 0 = free, 1 = on the box
+    });
+  }
+
+  var phase = 'drift', phaseT = 0;
+  var DUR = { drift: 5.5, gather: 1.4, hold: 5.0, release: 1.4 };
+  var rotY = 0.5, rotX = -0.35;
+  var accent = function () {
+    return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#5B8DF5';
+  };
+
+  function project(p) {
+    // rotate then weak-perspective project into the right half of the hero
+    var cy = Math.cos(rotY), sy = Math.sin(rotY), cx = Math.cos(rotX), sx = Math.sin(rotX);
+    var x = p[0] * cy + p[2] * sy;
+    var z = -p[0] * sy + p[2] * cy;
+    var y = p[1] * cx - z * sx;
+    z = p[1] * sx + z * cx;
+    var s = 1.9 / (3.2 + z);
+    var cxpx = W * (W > 820 ? 0.74 : 0.5);
+    var scale = Math.min(W, H) * 0.34;
+    return [cxpx + x * s * scale, H * 0.48 + y * s * scale, z];
+  }
+  function ease(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+  var last = performance.now();
+  function frame(now) {
+    var dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    phaseT += dt;
+    if (phaseT > DUR[phase]) {
+      phaseT = 0;
+      phase = phase === 'drift' ? 'gather' : phase === 'gather' ? 'hold'
+            : phase === 'hold' ? 'release' : 'drift';
+    }
+    if (phase === 'hold' || phase === 'gather') rotY += dt * 0.25;
+
+    var kTarget = (phase === 'gather') ? ease(Math.min(phaseT / DUR.gather, 1))
+                : (phase === 'hold') ? 1
+                : (phase === 'release') ? 1 - ease(Math.min(phaseT / DUR.release, 1))
+                : 0;
+
+    ctx.clearRect(0, 0, W, H);
+    var col = accent();
+    for (var i = 0; i < N; i++) {
+      var p = pts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -0.25 || p.x > 1.45) p.vx *= -1;
+      if (p.y < -0.05 || p.y > 1.05) p.vy *= -1;
+      p.k += (kTarget - p.k) * 0.08;
+
+      var proj = project(boxPts[i]);
+      var fx = p.x * W, fy = p.y * H;
+      var x = fx + (proj[0] - fx) * p.k;
+      var y = fy + (proj[1] - fy) * p.k;
+      var depth = 1 - (proj[2] + 1) / 2.4;
+      var r = 1.1 + p.k * depth * 1.6;
+      var alpha = 0.25 + p.k * (0.25 + depth * 0.4);
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, 6.2832);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+
+  if (reduced) {
+    // Static scatter: draw once, no loop.
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = accent();
+    ctx.globalAlpha = 0.3;
+    for (var s = 0; s < N; s++) {
+      ctx.beginPath();
+      ctx.arc(pts[s].x * W, pts[s].y * H, 1.3, 0, 6.2832);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  } else {
+    requestAnimationFrame(frame);
+  }
+})();
+</script>
+</body>
+</html>
