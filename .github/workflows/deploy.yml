@@ -1,15 +1,28 @@
 name: Deploy dev to GitHub Pages
 
-# Manual-only. Run it from the Actions tab (or `gh workflow run deploy.yml`)
-# when dev is ready to go live. Merging a PR into dev no longer deploys by
-# itself; this button is the release step.
+# Manual-only. Run it from the Actions tab (or `gh workflow run deploy.yml --ref dev`)
+# when dev is ready to go live. Merging a PR into dev does not deploy by itself;
+# this button is the release step.
+#
+# Publishing goes through a Pages artifact instead of a deploy branch. That is
+# the protection story for prod: only a workflow with pages:write can create a
+# Pages deployment, so there is no branch anyone could push to by hand. The old
+# `deploy` branch is retired and no longer serves anything.
 on:
   workflow_dispatch:
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
       # Pinned to dev so the button always deploys dev, no matter which
       # branch the run was started from.
@@ -35,9 +48,18 @@ jobs:
       - name: Build Gatsby site
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: deploy
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
