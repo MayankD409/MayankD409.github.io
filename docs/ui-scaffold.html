@@ -189,6 +189,43 @@
   [data-theme="light"] .pill.building { background: rgba(22,140,60,0.12); color: #168c3c; }
   .pill.planned { background: var(--accent-soft); color: var(--accent); }
 
+  /* projects */
+  .feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 860px) { .feat-grid { grid-template-columns: 1fr; } }
+  a.card { display: block; color: var(--text); }
+  a.card:hover { color: var(--text); }
+  .card h3 .gh {
+    margin-left: auto; color: var(--faint); font-family: "Geist Mono", monospace;
+    font-size: 13px; font-weight: 400;
+  }
+  .card:hover h3 .gh { color: var(--accent); }
+  .proj-rows { display: none; flex-direction: column; margin-top: 10px; }
+  .proj-rows.open { display: flex; }
+  .proj-row {
+    display: flex; align-items: baseline; gap: 14px; padding: 12px 16px;
+    border-radius: 10px; color: var(--text);
+  }
+  .proj-row:hover { background: var(--card); color: var(--text); }
+  .proj-row .t { font-weight: 500; font-size: 14.5px; }
+  .proj-row .tech {
+    margin-left: auto; font-family: "Geist Mono", monospace; font-size: 11.5px;
+    color: var(--faint); white-space: nowrap;
+  }
+  .proj-foot { display: flex; align-items: center; gap: 18px; margin-top: 16px; }
+  .archive-link { font-family: "Geist Mono", monospace; font-size: 12.5px; }
+
+  /* social rail */
+  .rail {
+    position: fixed; right: 22px; bottom: 0; z-index: 30;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .rail::after { content: ""; width: 1px; height: 72px; background: var(--border); margin-top: 8px; }
+  .rail a { color: var(--muted); display: flex; padding: 6px; border-radius: 8px; transition: color 0.15s ease, transform 0.15s ease; }
+  .rail a:hover { color: var(--accent); transform: translateY(-2px); }
+  .rail a svg { width: 17px; height: 17px; fill: currentColor; }
+  @media (max-width: 900px) { .rail { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .rail a:hover { transform: none; } }
+
   /* writing */
   .posts { display: flex; flex-direction: column; }
   .post {
@@ -266,6 +303,7 @@
     <div class="links" id="navlinks">
       <a href="#experience">Experience</a>
       <a href="#labs">Labs</a>
+      <a href="#projects">Projects</a>
       <a href="#writing">Writing</a>
       <a href="#about">About</a>
     </div>
@@ -347,8 +385,57 @@
   </div>
 </section>
 
+<section class="block" id="projects">
+  <div class="sec-head"><h2>Projects</h2><span class="count">03</span></div>
+  <div class="note">Note — same shape the old site had, kept on purpose: a few featured, the rest folded behind a toggle so the page doesn't stretch forever. Featured cards link straight to GitHub. The full archive table stays as its own page. The fixed icon rail on the right is also kept from the old site: socials reachable from anywhere without scrolling to the footer. It hides on mobile, where the footer takes over.</div>
+  <div class="feat-grid">
+    <a class="card" href="https://github.com/MayankD409/Humanoid_gait_generation" target="_blank" rel="noopener noreferrer">
+      <h3>Humanoid Gait via Imitation Learning <span class="gh">↗</span></h3>
+      <p>Taught a simulated humanoid to walk by watching human video. GAIL and PPO in PyBullet, no mocap.</p>
+      <div class="meta">Python · PyBullet · Stable-Baselines3</div>
+    </a>
+    <a class="card" href="https://github.com/MayankD409/VisualOdom-Particle-Filter" target="_blank" rel="noopener noreferrer">
+      <h3>VisualOdom Particle Filter <span class="gh">↗</span></h3>
+      <p>Drone localization with a particle filter over learned visual encoders, closed-loop in a PX4 sim.</p>
+      <div class="meta">C++ · ROS2 · PyTorch</div>
+    </a>
+    <a class="card" href="https://github.com/MayankD409/Structure-From-Motion" target="_blank" rel="noopener noreferrer">
+      <h3>Structure from Motion <span class="gh">↗</span></h3>
+      <p>The classic pipeline, written from scratch: matching, epipolar geometry, triangulation, bundle adjustment.</p>
+      <div class="meta">C++ · OpenCV · Eigen</div>
+    </a>
+    <a class="card" href="https://github.com/MayankD409/RL_MPC" target="_blank" rel="noopener noreferrer">
+      <h3>Adaptive RL-MPC Lane Changing <span class="gh">↗</span></h3>
+      <p>RL decides when to change lanes, MPC executes the move. 25% fewer collisions in SUMO traffic.</p>
+      <div class="meta">Python · SUMO · PPO/SAC</div>
+    </a>
+  </div>
+  <div class="proj-rows" id="projrows">
+    <a class="proj-row" href="https://github.com/MayankD409/RIEKF_Python" target="_blank" rel="noopener noreferrer">
+      <span class="t">Right-Invariant EKF for Object-Based SLAM</span><span class="tech">Python · NumPy</span>
+    </a>
+    <a class="proj-row" href="https://github.com/MayankD409/MultiRobot_Search_and_Rescue" target="_blank" rel="noopener noreferrer">
+      <span class="t">MultiRobot Search &amp; Rescue</span><span class="tech">C++ · ROS2 · GoogleTest</span>
+    </a>
+    <a class="proj-row" href="https://github.com/MayankD409/Bruno_Quadruped_Sim" target="_blank" rel="noopener noreferrer">
+      <span class="t">Quadruped Gait Simulation</span><span class="tech">C++ · ROS2 · Gazebo</span>
+    </a>
+    <a class="proj-row" href="https://github.com/MayankD409/Video-Temporal-Consistency-Analysis" target="_blank" rel="noopener noreferrer">
+      <span class="t">Temporal Coherence in Video-Language Models</span><span class="tech">PyTorch · CLIP</span>
+    </a>
+    <div class="proj-row"><span class="t">AutoPano — panorama stitching</span><span class="tech">Python · OpenCV</span></div>
+    <div class="proj-row"><span class="t">Stereo Vision depth estimation</span><span class="tech">C++ · OpenCV</span></div>
+    <div class="proj-row"><span class="t">AutoCalib — camera calibration from scratch</span><span class="tech">Python · OpenCV</span></div>
+    <div class="proj-row"><span class="t">Human Detection &amp; Tracking</span><span class="tech">C++ · MiDaS · gtest</span></div>
+  </div>
+  <div class="proj-foot">
+    <button class="btn ghost" id="morebtn">Show all projects</button>
+    <a class="archive-link" href="https://mayankd.me/archive">full archive ↗</a>
+  </div>
+</section>
+
 <section class="block" id="writing">
-  <div class="sec-head"><h2>Writing</h2><span class="count">03</span></div>
+  <div class="sec-head"><h2>Writing</h2><span class="count">04</span></div>
   <div class="note">Note — one real post today, so the planned ones are labeled planned instead of faked. Every lab ships with a "how it works" writeup, which is where this section grows from.</div>
   <div class="posts">
     <a class="post" href="https://mayankd.me/blog/multi-agent-rl-traffic-management">
@@ -367,7 +454,7 @@
 </section>
 
 <section class="block about" id="about">
-  <div class="sec-head"><h2>About</h2><span class="count">04</span></div>
+  <div class="sec-head"><h2>About</h2><span class="count">05</span></div>
   <div class="note">Note — site voice, short. The football/finance/startups line survives from the old site because it's the most me thing on it.</div>
   <p>I absolutely love talking <b>Football, Finance, and Startups</b> — and honestly, life would've been way more exciting if I was already working in one of those <i>(but hey, I'm getting there!)</i>.</p>
   <p>I did my Master's in Robotics at Maryland, and these days I'm a <b>Perception Engineer at Contoro Robotics</b>, teaching robots to see inside shipping containers. What hooked me on all of this was a course on <b>Multimodal Foundation Models</b>; that thread runs through everything in the labs above.</p>
@@ -387,6 +474,21 @@
     <div class="colophon">ui-scaffold v1 · not the real site · iterate here, build in Astro</div>
   </div>
 </footer>
+
+<aside class="rail" aria-label="Social links">
+  <a href="https://github.com/MayankD409" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+  <a href="https://www.linkedin.com/in/msdeshpande04/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  <a href="https://x.com/Mayank_D04" target="_blank" rel="noopener noreferrer" aria-label="X">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+  </a>
+  <a href="https://medium.com/@deshpandemayank5" target="_blank" rel="noopener noreferrer" aria-label="Medium">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.87 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75S24 8.83 24 12z"/></svg>
+  </a>
+</aside>
 
 <button class="btn ghost notes-btn" id="notesbtn">Notes: off</button>
 
@@ -425,7 +527,7 @@
       }
     });
   }, { rootMargin: '-35% 0px -55% 0px' });
-  ['experience', 'labs', 'writing', 'about'].forEach(function (id) {
+  ['experience', 'labs', 'projects', 'writing', 'about'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) io.observe(el);
   });
@@ -449,6 +551,14 @@
     });
   });
 
+  /* ---------- show-all projects toggle ---------- */
+  var moreBtn = document.getElementById('morebtn');
+  var projRows = document.getElementById('projrows');
+  moreBtn.addEventListener('click', function () {
+    var open = projRows.classList.toggle('open');
+    moreBtn.textContent = open ? 'Show fewer' : 'Show all projects';
+  });
+
   /* ---------- notes mode ---------- */
   var notesBtn = document.getElementById('notesbtn');
   function toggleNotes() {
@@ -465,6 +575,7 @@
   var commands = [
     { label: 'Go to Experience', hint: 'section', run: function () { location.hash = '#experience'; } },
     { label: 'Go to Labs', hint: 'section', run: function () { location.hash = '#labs'; } },
+    { label: 'Go to Projects', hint: 'section', run: function () { location.hash = '#projects'; } },
     { label: 'Go to Writing', hint: 'section', run: function () { location.hash = '#writing'; } },
     { label: 'Go to About', hint: 'section', run: function () { location.hash = '#about'; } },
     { label: 'Open Resume', hint: 'pdf', run: function () { window.open('https://mayankd.me/resume.pdf', '_blank', 'noopener'); } },
