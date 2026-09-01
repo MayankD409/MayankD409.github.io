@@ -3,7 +3,7 @@ date: '2026-08-07'
 title: 'Robotics Perception Engineer'
 company: 'Contoro Robotics'
 location: 'Austin, TX'
-range: 'Oct 2025 - Present'
+range: 'July 2025 - Present'
 url: 'https://contoro.com/'
 ---
 
